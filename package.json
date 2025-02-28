@@ -1,0 +1,97 @@
+{
+  "name": "whisper-to-clipboard",
+  "displayName": "Whisper to Clipboard",
+  "description": "Record your voice with shortcut (CMD+SHIFT+R) and transcribe it using OpenAI's Whisper API. The transcribed text will be copied to the clipboard so you can use it in your AI Panel for example.",
+  "version": "0.1.0",
+  "publisher": "cursor-extensions",
+  "author": {
+    "name": "Cursor Extensions"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GrowthWizard/whisper-to-clipboard"
+  },
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.74.0",
+    "cursor": "^0.2.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "voice",
+    "speech",
+    "transcription",
+    "whisper",
+    "openai",
+    "cursor"
+  ],
+  "activationEvents": [
+    "onCommand:whisper-to-clipboard.toggleRecording",
+    "onCommand:whisper-to-clipboard.setApiKey",
+    "onCommand:whisper-to-clipboard.openChat",
+    "onCommand:whisper-to-clipboard.showChatButton"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "whisper-to-clipboard.toggleRecording",
+        "title": "Toggle Voice Recording (Start/Stop)"
+      },
+      {
+        "command": "whisper-to-clipboard.setApiKey",
+        "title": "Set OpenAI API Key for Voice-to-Text"
+      },
+      {
+        "command": "whisper-to-clipboard.openChat",
+        "title": "Open Chat Window"
+      },
+      {
+        "command": "whisper-to-clipboard.showChatButton",
+        "title": "Show Voice Recording Button Panel"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "whisper-to-clipboard.toggleRecording",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r",
+        "when": "editorTextFocus || terminalFocus || !editorFocus"
+      }
+    ],
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "whisper-to-clipboard-panel",
+          "title": "Whisper to Clipboard",
+          "icon": "$(unmute)"
+        }
+      ]
+    },
+    "views": {
+      "whisper-to-clipboard-panel": [
+        {
+          "id": "whisper-to-clipboard.chatButton",
+          "name": "Voice Recording"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^16.x",
+    "@types/vscode": "^1.74.0",
+    "typescript": "^5.0.4",
+    "@vscode/vsce": "^2.19.0"
+  },
+  "dependencies": {
+    "openai": "^4.0.0"
+  }
+}
