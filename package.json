@@ -2,7 +2,7 @@
   "name": "whisper-to-clipboard",
   "displayName": "Whisper to Clipboard",
   "description": "Record your voice with shortcut (CMD+SHIFT+R) and transcribe it using OpenAI's Whisper API. The transcribed text will be copied to the clipboard so you can use it in your AI Panel for example.",
-  "version": "0.1.0",
+  "version": "0.2.3",
   "publisher": "cursor-extensions",
   "author": {
     "name": "Cursor Extensions"
@@ -30,11 +30,59 @@
   "activationEvents": [
     "onCommand:whisper-to-clipboard.toggleRecording",
     "onCommand:whisper-to-clipboard.setApiKey",
+    "onCommand:whisper-to-clipboard.setRecordingDuration",
     "onCommand:whisper-to-clipboard.openChat",
     "onCommand:whisper-to-clipboard.showChatButton"
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Whisper to Clipboard",
+      "properties": {
+        "whisperToClipboard.openaiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Your OpenAI API key for accessing the Whisper API (starts with sk-...)"
+        },
+        "whisperToClipboard.recordingDurationSeconds": {
+          "type": "number",
+          "default": 120,
+          "minimum": 1,
+          "maximum": 600,
+          "description": "Maximum recording duration in seconds (default: 120 seconds)"
+        },
+        "whisperToClipboard.audioQuality": {
+          "type": "string",
+          "default": "standard",
+          "enum": ["economy", "standard", "high"],
+          "enumDescriptions": [
+            "Lower quality (16kHz) - More economical for API usage",
+            "Standard quality (24kHz) - Good balance between quality and cost",
+            "High quality (44.1kHz) - Best transcription quality but larger files"
+          ],
+          "description": "Audio recording quality (affects API usage costs)"
+        },
+        "whisperToClipboard.languageMode": {
+          "type": "string",
+          "default": "auto",
+          "enum": ["auto", "en", "de", "fr", "es", "it", "pt", "nl", "ja", "zh", "ru"],
+          "enumDescriptions": [
+            "Auto-detect language (recommended)",
+            "English",
+            "German (Deutsch)",
+            "French (Français)",
+            "Spanish (Español)",
+            "Italian (Italiano)",
+            "Portuguese (Português)",
+            "Dutch (Nederlands)",
+            "Japanese (日本語)",
+            "Chinese (中文)",
+            "Russian (Русский)"
+          ],
+          "description": "Language setting for transcription (auto-detect or specific language)"
+        }
+      }
+    },
     "commands": [
       {
         "command": "whisper-to-clipboard.toggleRecording",
@@ -43,6 +91,18 @@
       {
         "command": "whisper-to-clipboard.setApiKey",
         "title": "Set OpenAI API Key for Voice-to-Text"
+      },
+      {
+        "command": "whisper-to-clipboard.setRecordingDuration",
+        "title": "Set Maximum Recording Duration"
+      },
+      {
+        "command": "whisper-to-clipboard.setAudioQuality",
+        "title": "Set Audio Recording Quality"
+      },
+      {
+        "command": "whisper-to-clipboard.setLanguageMode",
+        "title": "Set Transcription Language Mode"
       },
       {
         "command": "whisper-to-clipboard.openChat",

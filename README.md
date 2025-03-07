@@ -10,6 +10,10 @@ A VSCode extension that adds voice-to-text functionality using OpenAI's Whisper 
 - Single keyboard shortcut (`Cmd+Shift+R` / `Ctrl+Shift+R`) to toggle recording
 - Status bar button for easy access
 - Dedicated panel for recording controls
+- **Configurable recording duration** (default: 2 minutes)
+- **Adjustable audio quality settings** to balance transcription quality and API costs
+- **Multi-language support** with automatic language detection or specific language selection
+- **Smart handling of long recordings** by splitting into optimal chunks (requires FFmpeg)
 
 ## Usage Example
 
@@ -20,6 +24,8 @@ The official Whisper API is quite cheap. Since the most prompts are short, the c
 
 - Whisper API: $0.006 per minute (based on Feb 2025 pricing)
 
+Note: Higher audio quality settings will result in larger file sizes, which may slightly increase API costs due to larger data transfers. The extension now offers three quality levels to help you balance quality and cost.
+
 ## Requirements
 
 - Cursor Editor
@@ -29,6 +35,9 @@ The official Whisper API is quite cheap. Since the most prompts are short, the c
   - **macOS**: SoX (`brew install sox`)
   - **Linux**: arecord (part of ALSA utils, `sudo apt-get install alsa-utils`)
   - **Windows**: Not yet supported (coming soon)
+- **Optional but recommended**: FFmpeg for improved handling of long recordings
+  - **macOS**: `brew install ffmpeg`
+  - **Linux**: `sudo apt-get install ffmpeg`
 
 ## Installation
 
@@ -39,11 +48,13 @@ Before installing the extension, install the required audio recording tools:
 #### macOS
 ```bash
 brew install sox
+brew install ffmpeg  # Optional but recommended for long recordings
 ```
 
 #### Linux
 ```bash
 sudo apt-get install alsa-utils
+sudo apt-get install ffmpeg  # Optional but recommended for long recordings
 ```
 
 ### Manually Installing the Extension
@@ -60,6 +71,50 @@ sudo apt-get install alsa-utils
 4. Press the same shortcut `CMD+Shift+R` again to stop recording
 5. The transcribed text will be automatically copied to your clipboard
 6. Paste the text anywhere using `Cmd+V` (Mac) / `Ctrl+V` (Windows/Linux)
+
+### Long Recordings
+
+For recordings longer than 1 minute:
+- If FFmpeg is installed, the extension will automatically split the recording into optimal chunks for better transcription accuracy
+- Each chunk will be processed separately and then combined into a single coherent transcription
+- This helps overcome Whisper API limitations with longer recordings
+
+## Configuration
+
+### Recording Duration
+
+You can configure the maximum recording duration:
+
+1. Via the extension panel: Click the "Set Recording Duration" button
+2. Via command palette: Run the "Set Maximum Recording Duration" command
+3. Via settings: Edit the `whisperToClipboard.recordingDurationSeconds` setting
+
+The default duration is 120 seconds (2 minutes), but you can set it up to 600 seconds (10 minutes).
+
+### Audio Quality
+
+You can configure the audio quality to balance between transcription accuracy and API costs:
+
+1. Via the extension panel: Click the "Set Audio Quality" button
+2. Via command palette: Run the "Set Audio Recording Quality" command
+3. Via settings: Edit the `whisperToClipboard.audioQuality` setting
+
+Available quality options:
+- **Economy (16kHz)**: Lower quality, smaller files, more economical for API usage
+- **Standard (24kHz)**: Good balance between quality and cost (default)
+- **High (44.1kHz)**: Best transcription quality but larger files
+
+### Language Settings
+
+You can configure how the extension handles different languages:
+
+1. Via the extension panel: Click the "Set Language Mode" button
+2. Via command palette: Run the "Set Transcription Language Mode" command
+3. Via settings: Edit the `whisperToClipboard.languageMode` setting
+
+Available language options:
+- **Auto-detect language** (default): Whisper will automatically detect the language you're speaking
+- **Specific language**: Force transcription in a specific language (English, German, French, etc.)
 
 ## Where is your API Key stored?
 
@@ -78,10 +133,26 @@ For easier access:
 ### Recording Issues
 - Make sure you have installed the required system dependencies
 - Check that your microphone is properly connected and has permission to be accessed
+- If you're getting very short or incorrect transcriptions (like "youyou"), try the following:
+  - Speak clearly and at a normal pace
+  - Make sure there's not too much background noise
+  - Try recording in a quieter environment
+  - Check that your microphone is not muted or set to a very low volume
+  - Try increasing the audio quality setting (may increase API costs slightly)
 
 ### Transcription Issues
 - Verify your OpenAI API key is correct and has access to the Whisper API
 - Ensure you're speaking clearly and your microphone is working properly
+- If your recording is being cut off, try increasing the recording duration in the settings
+- If you receive unusually short transcriptions, a debug audio file will be saved to your home directory for troubleshooting
+- If you're concerned about API costs, try the "Economy" audio quality setting
+- If you're speaking in a language other than English and getting translations instead of transcriptions, make sure to set the language mode to "Auto-detect" or select your specific language
+- For long recordings (>1 minute), install FFmpeg for better handling and more accurate transcriptions
+
+### Long Recording Issues
+- If only part of your long recording is being transcribed, install FFmpeg which enables the extension to split the recording into optimal chunks
+- For very long recordings, try setting a specific language instead of using auto-detect
+- If you're still having issues with long recordings, try recording in shorter segments
 
 ## Development
 
@@ -96,7 +167,7 @@ npm run build
 npm run package
 
 # Install the extension in Cursor
-cursor --install-extension releases/whisper-to-clipboard-0.1.0.vsix
+cursor --install-extension whisper-to-clipboard-0.2.3.vsix
 
 ```
 
