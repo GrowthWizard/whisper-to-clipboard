@@ -2,6 +2,8 @@
 
 A VSCode extension that adds voice-to-text functionality using OpenAI's Whisper API.
 
+![VS Code Preview](https://p180.p1.n0.cdn.zight.com/items/o0u10nnE/f79f782c-2f4b-47db-a23b-db993106e1b1.gif?source=client&v=27e64cb73b5042fdef4f0cf67f9f7f29)
+
 ## Features
 
 - Record voice directly from VSCode
